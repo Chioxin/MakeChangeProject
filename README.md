@@ -1,4 +1,7 @@
 ## Make Change Project
+<dl>
+	<img src="https://github.com/Chioxin/MakeChangeProject/blob/master/CashRegister.jpg?raw=true" alt="POS = Point of Service, what did you think?" ALIGN="right" width="250"/>
+</dl>
 
 This project simulates a cash register. A user is asked to enter an item amount and is then asked how much they'd like to pay with.
 
