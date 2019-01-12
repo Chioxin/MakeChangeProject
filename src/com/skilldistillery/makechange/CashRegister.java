@@ -33,35 +33,51 @@ public class CashRegister {
 		} else if (moneyTendered == ticketCost) { // Exact change received.
 			System.out.println("Thank you for the exact change!");
 		} else { // More money was received than needed.
-			double change = moneyTendered - ticketCost;
-			System.out.printf("Thank you, let me get your $%.2f in change.\n" , change);
-			change = calculateChange(change, 20.0, "Twenties");
-			change = calculateChange(change, 10.0, "Tens");
-			change = calculateChange(change, 5.0, "Fives");
-			change = calculateChange(change, 1.0, "Ones");
-			change = calculateChange(change, 0.25, "Quarters");
-			change = calculateChange(change, 0.10, "Dimes");
-			change = calculateChange(change, 0.05, "Nickels");
-			change = calculateChange(change, 0.01, "Pennies");
+			double d = (moneyTendered - ticketCost);
+			int changeInPennies = convertToPennies(d);
+			System.out.printf("Thank you, let me get your $%.2f in change.\n" , (changeInPennies*.01));
+			changeInPennies = calculateChange(changeInPennies, 20.0, "Twenties");
+			changeInPennies = calculateChange(changeInPennies, 10.0, "Tens");
+			changeInPennies = calculateChange(changeInPennies, 5.0, "Fives");
+			changeInPennies = calculateChange(changeInPennies, 1.0, "Ones");
+			changeInPennies = calculateChange(changeInPennies, 0.25, "Quarters");
+			changeInPennies = calculateChange(changeInPennies, 0.10, "Dimes");
+			changeInPennies = calculateChange(changeInPennies, 0.05, "Nickels");
+			changeInPennies = calculateChange(changeInPennies, 0.01, "Pennies");
 			
 		}
 		
 	}
-	
-	public void outputChange (int num, double value, String moneyType) {
-		//Outputs the number of bills, and displays how many to give out for what amount.
-		System.out.printf("%d " + moneyType + " for a total of: $%.2f\n", num,  (num * value));
-//		System.out.print((num + "\t" + moneyType + " for a total of:\t$" + (num * value)));
-		
-	}
-	
-	public double calculateChange(double change, double moneyValue, String moneyType) {
+	public int calculateChange(int change, double moneyValue, String moneyType) {
 		//Calculate the change and outputs the money left over.
+		//It is required that "change" is in pennies at this point!
+		int moneyValueAsPennies = convertToPennies(moneyValue);
+		int n =(int)(change/moneyValueAsPennies);
+		outputChange(n, moneyValueAsPennies, moneyType);
+		return change - (n * moneyValueAsPennies);
 		
-		int n =(int)(change/moneyValue);
-		outputChange(n, moneyValue, moneyType);
-		System.out.println(change + " <--- Current :: Predicted ---> " + (change - (n*moneyValue)));
-		return change - (n * moneyValue);
 	}
+	
+	public int convertToPennies (double n) {
+		//Converts a number to an integer, and decides if it should round the value up a penny
+		n = n * 100;
+		int pennies = (int)(n);
+		n = n - pennies;
+		
+		if (n >= .5) {
+			return (pennies + 1);
+		} else {
+			return pennies;
+		}
+
+	}
+	
+	public void outputChange (int num, int value, String moneyType) {
+		//Outputs the number of bills/coins, and displays how many to give out for what amount.
+		if (num != 0) {
+			System.out.printf("%d " + moneyType + " for a total of: $%.2f\n", num,  ((num * value) * .01));
+		}
+	}
+	
 
 }
