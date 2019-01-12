@@ -3,73 +3,54 @@ package com.skilldistillery.makechange;
 import java.util.Scanner;
 
 public class CashRegister {
-	public double ticketCost;
-	public double moneyTendered;
+	public int ticketCost;
+	public int moneyTendered;
 	
 	
-	public double getItemPrice(Scanner sc) {
+	public int getItemPrice(Scanner sc) {
 		//This method gets the price of the item the user wishes to purchase.
 		
 		System.out.print("How much does this item cost? >>");
-		ticketCost = sc.nextDouble();
+		ticketCost = (int)(sc.nextDouble() * 100); //converting to pennies immediately
 		return ticketCost;
-		
 	}
 	
-	public double getCashTendered(Scanner sc) {
+	public int getCashTendered(Scanner sc) {
 		//This method gets the cash from the user that they wish to use to pay for the item.
 		
 		System.out.print("How much money was received? >>");
-		moneyTendered = sc.nextDouble();
+		moneyTendered = (int)(sc.nextDouble() * 100); //converting to pennies immediately
 		return moneyTendered;
-		
 	}
 	
 	public void makeTransaction() {
 		//This method tests the whether the user has given enough money to the register.
 		
 		if (moneyTendered < ticketCost) { // Not enough money received.
-			System.out.printf("$%.2f won't pay for the cost of $%.2f.\n" , moneyTendered, ticketCost );
+			System.out.printf("$%.2f won't pay for the cost of $%.2f.\n" , ((moneyTendered * .01)), (ticketCost * .01));
 		} else if (moneyTendered == ticketCost) { // Exact change received.
 			System.out.println("Thank you for the exact change!");
 		} else { // More money was received than needed.
-			double d = (moneyTendered - ticketCost);
-			int changeInPennies = convertToPennies(d);
-			System.out.printf("Thank you, let me get your $%.2f in change.\n" , (changeInPennies*.01));
-			changeInPennies = calculateChange(changeInPennies, 20.0, "Twenties");
-			changeInPennies = calculateChange(changeInPennies, 10.0, "Tens");
-			changeInPennies = calculateChange(changeInPennies, 5.0, "Fives");
-			changeInPennies = calculateChange(changeInPennies, 1.0, "Ones");
-			changeInPennies = calculateChange(changeInPennies, 0.25, "Quarters");
-			changeInPennies = calculateChange(changeInPennies, 0.10, "Dimes");
-			changeInPennies = calculateChange(changeInPennies, 0.05, "Nickels");
-			changeInPennies = calculateChange(changeInPennies, 0.01, "Pennies");
-			
+			int change = (moneyTendered - ticketCost);
+			System.out.printf("Thank you, let me get your $%.2f in change.\n" , (change * .01));
+			change = calculateChange(change, 2000, "Twenties");
+			change = calculateChange(change, 1000, "Tens");
+			change = calculateChange(change, 500, "Fives");
+			change = calculateChange(change, 100, "Ones");
+			change = calculateChange(change, 25, "Quarters");
+			change = calculateChange(change, 10, "Dimes");
+			change = calculateChange(change, 5, "Nickels");
+			change = calculateChange(change, 1, "Pennies");
 		}
-		
 	}
-	public int calculateChange(int change, double moneyValue, String moneyType) {
-		//Calculate the change and outputs the money left over.
-		//It is required that "change" is in pennies at this point!
-		int moneyValueAsPennies = convertToPennies(moneyValue);
-		int n =(int)(change/moneyValueAsPennies);
-		outputChange(n, moneyValueAsPennies, moneyType);
-		return change - (n * moneyValueAsPennies);
-		
-	}
-	
-	public int convertToPennies (double n) {
-		//Converts a number to an integer, and decides if it should round the value up a penny
-		n = n * 100;
-		int pennies = (int)(n);
-		n = n - pennies;
-		
-		if (n >= .5) {
-			return (pennies + 1);
-		} else {
-			return pennies;
-		}
 
+	public int calculateChange(int change, int moneyValue, String moneyType) {
+		//Calculate the change and outputs the money left over.
+		int n = change/moneyValue;
+		int leftOver = change%moneyValue;
+
+		outputChange(n, moneyValue, moneyType);
+		return leftOver;
 	}
 	
 	public void outputChange (int num, int value, String moneyType) {
@@ -78,6 +59,4 @@ public class CashRegister {
 			System.out.printf("%d " + moneyType + " for a total of: $%.2f\n", num,  ((num * value) * .01));
 		}
 	}
-	
-
 }
